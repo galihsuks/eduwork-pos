@@ -13,6 +13,7 @@ const deliveryAddressRouter = require("./app/deliveryAddress/router");
 const cartRouter = require("./app/cart/router");
 const orderRouter = require("./app/order/router");
 const invoiceRouter = require("./app/invoice/router");
+const imageRouter = require("./app/image/router");
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use("/api", deliveryAddressRouter);
 app.use("/api", cartRouter);
 app.use("/api", orderRouter);
 app.use("/api", invoiceRouter);
+app.use("/image", imageRouter);
 app.use("/", function (req, res) {
     res.render("index", {
         judul: "Eduwork API Services",

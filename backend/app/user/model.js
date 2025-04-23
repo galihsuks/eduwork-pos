@@ -22,7 +22,7 @@ const userSchema = Schema(
         password: {
             type: String,
             required: [true, "Password harus diisi"],
-            maxlength: [5, "Panjang password maksimal 255 karakter"],
+            maxlength: [255, "Panjang password maksimal 255 karakter"],
         },
         role: {
             type: String,

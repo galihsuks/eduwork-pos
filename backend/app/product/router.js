@@ -5,6 +5,7 @@ const productController = require("./controller");
 const { police_check } = require("../../middlewares");
 
 router.get("/product", productController.index);
+router.get("/product/:id", productController.indexDetail);
 router.post(
     "/product",
     police_check("create", "Product"),

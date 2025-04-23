@@ -1,20 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 
 * {
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    /* color: var(--biru); */
 }
 
 :root {
-    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+    /* --ungu: #82415b; */
+    --ungu: #914716;
+    --oren: #e8ae87;
+    --jingga: #e6c9aa;
+    --biru: #423a4f;
+    --hijau: #526b65;
+}
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+.bg-ungu {
+    background-color: var(--ungu);
+}
+.text-ungu {
+    color: var(--ungu);
+}
+.text-biru {
+    color: var(--biru);
 }

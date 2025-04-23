@@ -114,7 +114,7 @@ const index = async (req, res, next) => {
                 };
         }
 
-        const count = await Product.find().countDocuments();
+        const count = await Product.find(criteria).countDocuments();
         const products = await Product.find(criteria)
             .skip(parseInt(skip))
             .limit(parseInt(limit))
@@ -123,6 +123,23 @@ const index = async (req, res, next) => {
         return res.json({
             data: products,
             count,
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+const indexDetail = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id)
+            .populate("category")
+            .populate("tags");
+        const products = await Product.find({
+            category: product.category._id,
+            _id: { $ne: product._id },
+        }).limit(5);
+        return res.json({
+            product,
+            products,
         });
     } catch (err) {
         next(err);
@@ -230,4 +247,4 @@ const destroy = async (req, res, next) => {
     }
 };
 
-module.exports = { store, index, update, destroy };
+module.exports = { store, index, update, destroy, indexDetail };
