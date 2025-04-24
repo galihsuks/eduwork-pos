@@ -8,9 +8,11 @@ import {
     RiUser3Fill,
     RiUser3Line,
 } from "react-icons/ri";
+import useCartStore from "../../store/cartStore";
 
 const Navbar = () => {
     const { userToken } = useUserStore();
+    const { cart } = useCartStore();
     const [scrollY, setScrollY] = useState(0);
     const [hoverSearch, setHoverSearch] = useState(false);
     const [hoverCart, setHoverCart] = useState(false);
@@ -75,6 +77,7 @@ const Navbar = () => {
                             </div>
                         </Link>
                         <Link
+                            to={"/cart"}
                             className="icon"
                             onMouseEnter={() => {
                                 setHoverCart(true);
@@ -83,7 +86,13 @@ const Navbar = () => {
                                 setHoverCart(false);
                             }}
                         >
-                            <span>2</span>
+                            {cart.length > 0 && (
+                                <span>
+                                    {cart.reduce((prev, curr) => {
+                                        return prev + curr.qty;
+                                    }, 0)}
+                                </span>
+                            )}
                             {hoverCart ? <IoCart /> : <IoCartOutline />}
                         </Link>
                         <Link

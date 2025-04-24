@@ -15,15 +15,23 @@ const useUserStore = create()(
                     userEmail: email,
                     userToken: token,
                 }),
+            emptyUser: () => {
+                set({
+                    userId: null,
+                    userName: null,
+                    userEmail: null,
+                    userToken: null,
+                });
+            },
         }),
         {
-            name: "user-storage", // Nama key di localStorage
+            name: "user-storage",
             partialize: (state) => ({
                 userId: state.userId,
                 userEmail: state.userEmail,
                 userName: state.userName,
                 userToken: state.userToken,
-            }), // Menyimpan hanya idUser dan emailUser
+            }),
         }
     )
 );

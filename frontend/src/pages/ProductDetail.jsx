@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
-import { FaArrowRightLong, FaCheck } from "react-icons/fa6";
+import { FaArrowRightLong, FaCheck, FaMinus, FaPlus } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
 import { Link, useParams } from "react-router-dom";
+import useCartStore from "../../store/cartStore";
+import useUserStore from "../../store/userStore";
 
 const ProductDetail = () => {
     const { id: id_product } = useParams();
     const [product, setProduct] = useState();
     const [products, setProducts] = useState([]);
+    const { cart, setCart } = useCartStore();
+    const { userToken } = useUserStore();
+    const [itemCart, setItemCart] = useState({});
+    const [error, setError] = useState("");
 
     useEffect(() => {
         (async () => {
@@ -39,6 +45,73 @@ const ProductDetail = () => {
         console.log(`limit : 5`);
         return 5;
     };
+
+    const fetchCart = async (body) => {
+        console.log(body);
+        const responseFetch = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
+            {
+                method: "put",
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    items: body,
+                }),
+            }
+        );
+        const cartJson = await responseFetch.json();
+        if (cartJson.error) {
+            return setError(cartJson.message);
+        }
+        setCart(cartJson);
+    };
+
+    const handleAddCart = (product_id) => {
+        const productSelected = cart.find((c) => c.product_id == product_id);
+        if (productSelected) {
+            fetchCart(
+                cart.map((c) => {
+                    if (c.product_id == product_id) {
+                        return {
+                            ...c,
+                            qty: c.qty + 1,
+                        };
+                    } else return c;
+                })
+            );
+        } else {
+            fetchCart([
+                ...cart,
+                {
+                    product_id,
+                    qty: 1,
+                },
+            ]);
+        }
+    };
+    const handleReduceCart = (product_id) => {
+        const productSelected = cart.find((c) => c.product_id == product_id);
+        if (productSelected.qty - 1 > 0) {
+            fetchCart(
+                cart.map((c) => {
+                    if (c.product_id == product_id) {
+                        return {
+                            ...c,
+                            qty: c.qty - 1,
+                        };
+                    } else return c;
+                })
+            );
+        } else {
+            fetchCart(cart.filter((c) => c.product_id != product_id));
+        }
+    };
+
+    useEffect(() => {
+        if (product) setItemCart(cart.find((c) => c.product_id == product._id));
+    }, [cart, product]);
 
     return (
         <>
@@ -106,10 +179,43 @@ const ProductDetail = () => {
                                 <h2 className="harga my-3">
                                     Rp {product.price.toLocaleString("id-ID")}
                                 </h2>
-                                <button className="btn-outline-coklat">
-                                    <p>ADD TO CART</p>
-                                    <IoCartOutline />
-                                </button>
+
+                                {error && (
+                                    <div className="message mb-5">{error}</div>
+                                )}
+                                {itemCart ? (
+                                    <div className="quantity">
+                                        <span
+                                            className="btn"
+                                            onClick={() => {
+                                                handleReduceCart(product._id);
+                                            }}
+                                        >
+                                            <FaMinus />
+                                        </span>
+                                        <span className="number">
+                                            {itemCart.qty}
+                                        </span>
+                                        <span
+                                            className="btn"
+                                            onClick={() => {
+                                                handleAddCart(product._id);
+                                            }}
+                                        >
+                                            <FaPlus />
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <button
+                                        className="btn-outline-coklat"
+                                        onClick={() => {
+                                            handleAddCart(product._id);
+                                        }}
+                                    >
+                                        <p>ADD TO CART</p>
+                                        <IoCartOutline />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

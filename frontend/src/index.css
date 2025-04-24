@@ -16,8 +16,20 @@
     --hijau: #526b65;
 }
 
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+}
+.konten {
+    flex: 1;
+}
+
 .bg-ungu {
     background-color: var(--ungu);
+}
+.bg-biru {
+    background-color: var(--biru);
 }
 .text-ungu {
     color: var(--ungu);

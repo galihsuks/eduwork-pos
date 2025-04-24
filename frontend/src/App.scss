@@ -230,6 +230,7 @@ nav {
 
 .btn-putih {
     display: flex;
+    justify-content: center;
     background-color: white;
     width: fit-content;
     padding: 0.5em 2em;
@@ -260,6 +261,8 @@ nav {
 }
 .btn-coklat {
     display: flex;
+    justify-content: center;
+
     background-color: var(--ungu);
     width: fit-content;
     padding: 0.5em 2em;
@@ -718,6 +721,47 @@ footer {
     }
 }
 
+.container-cart {
+    display: flex;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 2em;
+    margin-top: -50px;
+    position: relative;
+
+    .item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        img {
+            border-radius: 1em;
+            height: 100px;
+            width: 100px;
+            object-fit: cover;
+        }
+
+        .category {
+            font-size: 12px;
+            line-height: 15px;
+        }
+        .name {
+            font-weight: 500;
+            color: var(--biru);
+        }
+        .harga {
+            color: var(--ungu);
+        }
+        .btn-hapus {
+            color: var(--biru);
+            cursor: pointer;
+            &:hover {
+                color: var(--ungu);
+            }
+        }
+    }
+}
+
 .auth {
     display: flex;
     width: 100%;
@@ -812,4 +856,53 @@ footer {
     padding: 0.5em 1.5em;
     border-radius: 10px;
     font-size: 12px;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    font-weight: bold;
+
+    .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--biru);
+        height: 30px;
+        width: 30px;
+        border-radius: 100px;
+        font-size: 13px;
+        background-color: #dbd5e7;
+        cursor: pointer;
+        transition: 0.2s;
+
+        &:hover {
+            color: white;
+            background-color: var(--biru);
+            transition: 0.2s;
+        }
+    }
+    .number {
+        color: var(--biru);
+    }
+}
+
+.container-side-checkout {
+    border-left: 1px solid var(--biru);
+    min-width: 250px;
+
+    table {
+        font-size: 11px;
+        width: 100%;
+        color: rgb(88, 88, 88);
+
+        td {
+            padding-block: 0.2em;
+        }
+
+        .harga {
+            text-align: end;
+        }
+    }
 }

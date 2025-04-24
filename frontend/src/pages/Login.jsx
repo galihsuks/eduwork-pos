@@ -8,11 +8,13 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import useMessageStore from "../../store/messageStore";
 import useUserStore from "../../store/userStore";
+import useCartStore from "../../store/cartStore";
 
 const Login = () => {
     const navigator = useNavigate();
     const { getMessage } = useMessageStore();
     const { setUser } = useUserStore();
+    const { setCart } = useCartStore();
     const [showPass, setShowPass] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
@@ -30,7 +32,6 @@ const Login = () => {
 
     const handeSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
         (async () => {
             const fetchAuth = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
@@ -43,17 +44,30 @@ const Login = () => {
                 }
             );
             const authJson = await fetchAuth.json();
-            console.log(authJson);
             if (authJson.error) {
                 setError(authJson.message);
                 return;
             }
+
+            const fetchCart = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
+                {
+                    method: "get",
+                    headers: {
+                        Authorization: `Bearer ${authJson.token}`,
+                        "Content-type": "application/json",
+                    },
+                }
+            );
+            const cartJson = await fetchCart.json();
+
             setUser({
                 token: authJson.token,
                 full_name: authJson.user.full_name,
                 email: authJson.user.email,
                 _id: authJson.user._id,
             });
+            setCart(cartJson);
             navigator("/");
         })();
     };
