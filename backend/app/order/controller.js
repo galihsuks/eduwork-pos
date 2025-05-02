@@ -6,9 +6,9 @@ const OrderItem = require("../order-item/model");
 
 const store = async (req, res, next) => {
     try {
-        let { delivery_fee, delivery_address } = req.body;
+        let { delivery_fee, delivery_address } = req.body; //delivery_address = id delivery adddress
         let items = await CartItem.find({ user: req.user._id }).populate(
-            "product"
+            "product_id"
         );
         if (!items) {
             return res.json({
@@ -32,12 +32,12 @@ const store = async (req, res, next) => {
         });
         let orderItems = await OrderItem.insertMany(
             items.map((item) => ({
-                ...item,
-                name: item.product.name,
+                // ...item,
+                name: item.product_id.name,
                 qty: parseInt(item.qty),
-                price: parseInt(item.product.price),
+                price: parseInt(item.product_id.price),
                 order: order._id,
-                product: item.product._id,
+                product: item.product_id._id,
             }))
         );
         orderItems.forEach((item) => {
@@ -57,15 +57,45 @@ const store = async (req, res, next) => {
         next(err);
     }
 };
+const update = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        let orderNew = await Order.findByIdAndUpdate(id, req.body, {
+            new: true,
+            runValidators: true,
+        });
+        return res.json(orderNew);
+    } catch (err) {
+        if (err && err.name === "ValidationError") {
+            return res.json({
+                error: 1,
+                message: err.message,
+                fields: err.errors,
+            });
+        }
+        next(err);
+    }
+};
 const index = async (req, res, next) => {
     try {
         let { skip = 0, limit = 10 } = req.query;
-        let count = await Order.find({ user: req.user._id }).countDocuments();
-        let orders = await Order.find({ user: req.user._id })
-            .skip(parseInt(skip))
-            .limit(parseInt(limit))
-            .populate("order_items")
-            .sort("-createdAt");
+        let count, orders;
+        if (req.user.role == "admin") {
+            count = await Order.find().countDocuments();
+            orders = await Order.find()
+                .skip(parseInt(skip))
+                .limit(parseInt(limit))
+                .populate("order_items")
+                .populate("user")
+                .sort("-createdAt");
+        } else {
+            count = await Order.find({ user: req.user._id }).countDocuments();
+            orders = await Order.find({ user: req.user._id })
+                .skip(parseInt(skip))
+                .limit(parseInt(limit))
+                .populate("order_items")
+                .sort("-createdAt");
+        }
         return res.json({
             data: orders.map((order) => order.toJSON({ virtuals: true })),
             count,
@@ -75,4 +105,4 @@ const index = async (req, res, next) => {
     }
 };
 
-module.exports = { store, index };
+module.exports = { store, index, update };

@@ -1,7 +1,7 @@
 import { FaArrowRightLong } from "react-icons/fa6";
 import useUserStore from "../../store/userStore";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useCartStore from "../../store/cartStore";
 
 const Account = () => {
@@ -29,7 +29,7 @@ const Account = () => {
             }
             emptyUser();
             setCart([]);
-            navigator("/auth/login");
+            navigator("/login");
         })();
     };
     return (
@@ -49,20 +49,61 @@ const Account = () => {
             </div>
             <div className="konten">
                 <div className="container mx-auto py-7">
-                    {error && <div className="message mb-3">{error}</div>}
-                    <p>Full Name</p>
-                    <h3 className="mb-3">{userName}</h3>
-                    <p>Email</p>
-                    <h3 className="mb-5">{userEmail}</h3>
-                    <button
-                        className="btn-coklat"
-                        onClick={() => {
-                            handleLogout();
-                        }}
-                    >
-                        <p>LOGOUT</p>
-                        <FaArrowRightLong />
-                    </button>
+                    <div className="container-account">
+                        <div
+                            className={`sidebar-account ${
+                                window.innerWidth <= 700
+                                    ? "mb-5 gap-7"
+                                    : "pe-10 gap-2"
+                            }`}
+                        >
+                            <Link to={"/account"} className="btn-teks-aja">
+                                My Account
+                            </Link>
+                            <Link
+                                to={"/order"}
+                                className="btn-teks-aja"
+                                style={{ color: "gray" }}
+                            >
+                                My Orders
+                            </Link>
+                            {window.innerWidth > 700 && (
+                                <button
+                                    className="btn-coklat mt-4"
+                                    onClick={() => {
+                                        handleLogout();
+                                    }}
+                                >
+                                    <p>LOGOUT</p>
+                                    <FaArrowRightLong />
+                                </button>
+                            )}
+                        </div>
+                        <div
+                            className={`text-biru ${
+                                window.innerWidth <= 700 ? "" : "ps-10"
+                            }`}
+                        >
+                            {error && (
+                                <div className="message mb-3">{error}</div>
+                            )}
+                            <p>Full Name</p>
+                            <h3 className="mb-5">{userName}</h3>
+                            <p>Email</p>
+                            <h3>{userEmail}</h3>
+                        </div>
+                        {window.innerWidth <= 700 && (
+                            <button
+                                className="btn-coklat mt-5"
+                                onClick={() => {
+                                    handleLogout();
+                                }}
+                            >
+                                <p>LOGOUT</p>
+                                <FaArrowRightLong />
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

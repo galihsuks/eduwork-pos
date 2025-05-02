@@ -1,6 +1,6 @@
 import { IoCart, IoCartOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 import {
     RiSearchFill,
@@ -17,6 +17,9 @@ const Navbar = () => {
     const [hoverSearch, setHoverSearch] = useState(false);
     const [hoverCart, setHoverCart] = useState(false);
     const [hoverUser, setHoverUser] = useState(false);
+    const [search, setSearch] = useState("");
+    const navigator = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -27,6 +30,14 @@ const Navbar = () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        navigator(`/product?q=${search}`);
+        if (location.pathname == "/product") {
+            navigator(0);
+        }
+    };
 
     return (
         <>
@@ -58,9 +69,19 @@ const Navbar = () => {
                         <Link to={"/product"}>Products</Link>
                     </div>
                     <div className="icons">
-                        <Link className="flex items-center gap-2">
-                            <input type="text" />
-                            <div
+                        <form
+                            onSubmit={handleSearch}
+                            className="flex items-center gap-2"
+                        >
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                }}
+                            />
+                            <button
+                                type="submit"
                                 className="icon"
                                 onMouseEnter={() => {
                                     setHoverSearch(true);
@@ -74,8 +95,8 @@ const Navbar = () => {
                                 ) : (
                                     <RiSearchLine />
                                 )}
-                            </div>
-                        </Link>
+                            </button>
+                        </form>
                         <Link
                             to={"/cart"}
                             className="icon"
@@ -96,7 +117,7 @@ const Navbar = () => {
                             {hoverCart ? <IoCart /> : <IoCartOutline />}
                         </Link>
                         <Link
-                            to={userToken ? "/account" : "/auth/login"}
+                            to={userToken ? "/account" : "/login"}
                             className="icon"
                             onMouseEnter={() => {
                                 setHoverUser(true);

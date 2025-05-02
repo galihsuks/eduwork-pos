@@ -66,9 +66,10 @@ const Login = () => {
                 full_name: authJson.user.full_name,
                 email: authJson.user.email,
                 _id: authJson.user._id,
+                role: authJson.user.role,
             });
             setCart(cartJson);
-            navigator("/");
+            navigator(authJson.user.role == "user" ? "/" : "/admin/product");
         })();
     };
 
@@ -92,7 +93,7 @@ const Login = () => {
                 <Link
                     className="btn-outline-coklat"
                     style={{ fontSize: "12px" }}
-                    to={"/auth/regist"}
+                    to={"/regist"}
                 >
                     <p>REGISTER</p>
                     <FaArrowRightLong />

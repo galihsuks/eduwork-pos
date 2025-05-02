@@ -56,20 +56,44 @@ orderSchema.virtual("items_count").get(function () {
         0
     );
 });
+orderSchema.virtual("total_payment").get(function () {
+    return (
+        this.order_items.reduce(
+            (total, item) => total + parseInt(item.qty * item.price),
+            0
+        ) + this.delivery_fee
+    );
+});
 orderSchema.post("save", async function () {
     let sub_total = this.order_items.reduce(
         (total, item) => (total += item.price * item.qty),
         0
     );
+    console.log(this);
     let invoice = new Invoice({
         user: this.user,
         order: this._id,
-        sub_total,
+        sub_total: parseInt(sub_total),
         delivery_fee: parseInt(this.delivery_fee),
-        delivery_address: parseInt(this.delivery_address),
+        delivery_address: this.delivery_address,
         total: parseInt(sub_total + this.delivery_fee),
     });
+    console.log(invoice);
     await invoice.save();
+});
+orderSchema.post("findOneAndUpdate", async function (doc) {
+    if (!doc) return;
+    try {
+        if (doc.status == "processing") {
+            let invoice = await Invoice.findOne({ order: doc._id });
+            if (invoice) {
+                invoice.payment_status = "paid";
+            }
+            await invoice.save();
+        }
+    } catch (error) {
+        console.error(`Error update invoice`, error);
+    }
 });
 
 module.exports = model("Order", orderSchema);

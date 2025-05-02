@@ -122,8 +122,13 @@ const Cart = () => {
                 >
                     {cart.length > 0 ? (
                         <div
-                            className="flex flex-col gap-2"
-                            style={{ flex: 1 }}
+                            className={`flex flex-col gap-2 ${
+                                window.innerWidth < 700 ? "pe-5" : "pe-8"
+                            }`}
+                            style={{
+                                flex: 1,
+                                borderRight: "1px solid var(--biru)",
+                            }}
                         >
                             {cart.map((c, ind_c) => (
                                 <div key={ind_c} className="item">
@@ -222,8 +227,13 @@ const Cart = () => {
                         </div>
                     ) : (
                         <div
-                            style={{ flex: 1 }}
-                            className="flex flex-col justify-center items-center"
+                            style={{
+                                flex: 1,
+                                borderRight: "1px solid var(--biru)",
+                            }}
+                            className={`flex flex-col justify-center items-center ${
+                                window.innerWidth < 700 ? "pe-5" : "pe-8"
+                            }`}
                         >
                             <p className="mb-2">Enter your favorite item</p>
                             <Link
@@ -235,11 +245,7 @@ const Cart = () => {
                             </Link>
                         </div>
                     )}
-                    <div
-                        className={`container-side-checkout ${
-                            window.innerWidth < 700 ? "ps-5" : "ps-8"
-                        }`}
-                    >
+                    <div className={`container-side-checkout`}>
                         <h3
                             className="text-biru mb-3"
                             style={{ fontFamily: '"Poppins", sans-serif' }}

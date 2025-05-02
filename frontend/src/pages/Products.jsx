@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
 import {
     FaCheck,
@@ -7,6 +7,7 @@ import {
     FaChevronRight,
     FaFilter,
 } from "react-icons/fa6";
+import useMessageStore from "../../store/messageStore";
 
 const tagsItems = [
     "Pedas",
@@ -35,7 +36,9 @@ const Products = () => {
         data: [],
         count: 0,
     });
-    const [category, setCategory] = useState("All");
+    const { getMessage, message } = useMessageStore();
+    // const categorySelectedFromHome = useRef(getMessage());
+    const [category, setCategory] = useState(message == "" ? "All" : message);
     const [tags, setTags] = useState([]);
     const [pag, setPag] = useState({
         skip: 1,
@@ -44,8 +47,13 @@ const Products = () => {
     const [numberPag, setNumberPag] = useState([]);
     const [showFilter, setShowFilter] = useState(true);
     const firstRender = useRef(false);
+    const navigator = useNavigate();
+    const location = useLocation();
+    const queryParmas = new URLSearchParams(location.search);
+    const findProductParams = queryParmas.get("q");
 
     useEffect(() => {
+        console.log(findProductParams);
         if (window.innerWidth < 700) {
             setShowFilter(false);
             console.log("ini kurang dari 700 inner widthnya");
@@ -61,7 +69,9 @@ const Products = () => {
             (async () => {
                 let url = `${
                     import.meta.env.VITE_BACKEND_URL
-                }/api/product?skip=0&limit=${pag.limit}`;
+                }/api/product?skip=0&limit=${pag.limit}${
+                    findProductParams ? `&q=${findProductParams}` : ""
+                }`;
                 if (category != "All") {
                     url += `&category=${encodeURI(category)}`;
                 }
@@ -92,7 +102,9 @@ const Products = () => {
         (async () => {
             let url = `${import.meta.env.VITE_BACKEND_URL}/api/product?skip=${
                 pag.skip
-            }&limit=${pag.limit}`;
+            }&limit=${pag.limit}${
+                findProductParams ? `&q=${findProductParams}` : ""
+            }`;
             if (category != "All") {
                 url += `&category=${encodeURI(category)}`;
             }
@@ -115,6 +127,7 @@ const Products = () => {
                 }
                 setNumberPag(angka);
             }
+            getMessage();
             if (!firstRender.current) firstRender.current = true;
         })();
     }, [pag.skip]);
@@ -122,6 +135,11 @@ const Products = () => {
     useEffect(() => {
         console.log(pag);
     }, [pag]);
+
+    const handleHapusFind = () => {
+        navigator(`/product`);
+        navigator(0);
+    };
 
     return (
         <>
@@ -224,16 +242,46 @@ const Products = () => {
                         </div>
                     </div>
                     <div style={{ flex: 1 }} className="flex flex-col">
-                        <div className="sub-section mb-1">
-                            <div className="icon">
-                                <img
-                                    src="img/restoqu-logo-r-white-little.png"
-                                    alt=""
-                                />
+                        <div className="flex justify-between gap-3 items-center">
+                            <div>
+                                <div className="sub-section mb-1">
+                                    <div className="icon">
+                                        <img
+                                            src="img/restoqu-logo-r-white-little.png"
+                                            alt=""
+                                        />
+                                    </div>
+                                    <p>Menu</p>
+                                </div>
+                                <h3 className="text-biru">
+                                    {findProductParams
+                                        ? `Anda mencari ${findProductParams}`
+                                        : "Explore Our Menu"}
+                                </h3>
                             </div>
-                            <p>Menu</p>
+                            {window.innerWidth > 700 && findProductParams && (
+                                <button
+                                    onClick={() => {
+                                        handleHapusFind();
+                                    }}
+                                    type="button"
+                                    className="btn-coklat"
+                                >
+                                    Hapus pencarian
+                                </button>
+                            )}
                         </div>
-                        <h3 className="text-biru">Explore Our Menu</h3>
+                        {window.innerWidth <= 700 && findProductParams && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    handleHapusFind();
+                                }}
+                                className="btn-coklat mt-2"
+                            >
+                                Hapus pencarian
+                            </button>
+                        )}
 
                         {products.data.length > 0 ? (
                             <>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaArrowRightLong, FaCheck, FaMinus, FaPlus } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useCartStore from "../../store/cartStore";
 import useUserStore from "../../store/userStore";
 
@@ -13,6 +13,7 @@ const ProductDetail = () => {
     const { userToken } = useUserStore();
     const [itemCart, setItemCart] = useState({});
     const [error, setError] = useState("");
+    const navigator = useNavigate();
 
     useEffect(() => {
         (async () => {
@@ -47,7 +48,8 @@ const ProductDetail = () => {
     };
 
     const fetchCart = async (body) => {
-        console.log(body);
+        console.log();
+        if (!userToken) return navigator("/login");
         const responseFetch = await fetch(
             `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
             {

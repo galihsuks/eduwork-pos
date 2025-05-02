@@ -22,7 +22,9 @@ const store = async (req, res, next) => {
 };
 const update = async (req, res, next) => {
     try {
-        let { _id, ...payload } = req.body;
+        // body = {
+        //     nama, kelurahan, kecamatan, kabupaten, provinsi, detail
+        // }
         let { id } = req.params;
         let address = await DeliveryAddress.findById(id);
         let subjectAddress = subject("DeliveryAddress", {
@@ -36,7 +38,7 @@ const update = async (req, res, next) => {
                 message: `You're not allowed to modify this resource`,
             });
         }
-        address = await DeliveryAddress.findByIdAndUpdate(id, payload, {
+        address = await DeliveryAddress.findByIdAndUpdate(id, req.body, {
             new: true,
         });
         return res.json(address);
@@ -53,7 +55,10 @@ const update = async (req, res, next) => {
 };
 const destroy = async (req, res, next) => {
     try {
+        console.log("ini destroy deliv addarsae");
+        const { id } = req.params;
         let address = await DeliveryAddress.findById(id);
+        console.log(address);
         let subjectAddress = subject("DeliveryAddress", {
             ...address,
             user_id: address.user,
@@ -68,6 +73,7 @@ const destroy = async (req, res, next) => {
         address = await DeliveryAddress.findByIdAndDelete(req.params.id);
         return res.json(address);
     } catch (err) {
+        console.log(err);
         next(err);
     }
 };

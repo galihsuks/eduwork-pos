@@ -39,7 +39,7 @@ const Regist = () => {
                 return;
             }
             setMessage("Berhasil mendaftar! Sekarang login dengan akun barumu");
-            navigator("/auth/login");
+            navigator("/login");
         })();
     };
 
@@ -67,7 +67,7 @@ const Regist = () => {
                 <Link
                     className="btn-outline-coklat"
                     style={{ fontSize: "12px" }}
-                    to={"/auth/login"}
+                    to={"/login"}
                 >
                     <p>LOG IN</p>
                     <FaArrowRightLong />

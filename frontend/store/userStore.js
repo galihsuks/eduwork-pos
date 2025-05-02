@@ -8,12 +8,14 @@ const useUserStore = create()(
             userName: null,
             userEmail: null,
             userToken: null,
-            setUser: ({ _id, email, full_name, token }) =>
+            userRole: null,
+            setUser: ({ _id, email, full_name, token, role }) =>
                 set({
                     userId: _id,
                     userName: full_name,
                     userEmail: email,
                     userToken: token,
+                    userRole: role,
                 }),
             emptyUser: () => {
                 set({
@@ -21,6 +23,7 @@ const useUserStore = create()(
                     userName: null,
                     userEmail: null,
                     userToken: null,
+                    userRole: null,
                 });
             },
         }),
@@ -31,6 +34,7 @@ const useUserStore = create()(
                 userEmail: state.userEmail,
                 userName: state.userName,
                 userToken: state.userToken,
+                userRole: state.userRole,
             }),
         }
     )

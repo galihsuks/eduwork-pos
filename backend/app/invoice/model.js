@@ -4,7 +4,7 @@ const { model, Schema } = mongoose;
 const invoiceSchema = Schema(
     {
         sub_total: {
-            type: String,
+            type: Number,
             required: [true, "Sub total harus diisi"],
         },
         delivery_fee: {

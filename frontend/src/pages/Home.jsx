@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
+import useMessageStore from "../../store/messageStore";
 
 const Home = () => {
     const [products, setProducts] = useState([]);
+    const { setMessage } = useMessageStore();
+    const navigator = useNavigate();
 
     useEffect(() => {
         (async () => {
@@ -24,6 +27,11 @@ const Home = () => {
     useEffect(() => {
         console.log(products);
     }, [products]);
+
+    const handleClickCategory = (category) => {
+        setMessage(category);
+        navigator("/product");
+    };
 
     return (
         <>
@@ -72,6 +80,9 @@ const Home = () => {
                 <div className="container-category my-5">
                     <div className="sub-container gap-2">
                         <div
+                            onClick={() => {
+                                handleClickCategory("Makanan Berat");
+                            }}
                             className="item"
                             style={{
                                 backgroundImage:
@@ -81,6 +92,9 @@ const Home = () => {
                             <p>Makanan berat</p>
                         </div>
                         <div
+                            onClick={() => {
+                                handleClickCategory("Minuman");
+                            }}
                             className="item"
                             style={{
                                 backgroundImage:
@@ -90,6 +104,9 @@ const Home = () => {
                             <p>Minuman</p>
                         </div>
                         <div
+                            onClick={() => {
+                                handleClickCategory("Camilan");
+                            }}
                             className="item"
                             style={{
                                 backgroundImage:
@@ -99,6 +116,9 @@ const Home = () => {
                             <p>Camilan</p>
                         </div>
                         <div
+                            onClick={() => {
+                                handleClickCategory("Dessert");
+                            }}
                             className="item"
                             style={{
                                 backgroundImage:
@@ -108,6 +128,9 @@ const Home = () => {
                             <p>Dessert</p>
                         </div>
                         <div
+                            onClick={() => {
+                                handleClickCategory("Makanan Sehat");
+                            }}
                             className="item"
                             style={{
                                 backgroundImage:

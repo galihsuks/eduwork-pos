@@ -14,6 +14,7 @@ const cartRouter = require("./app/cart/router");
 const orderRouter = require("./app/order/router");
 const invoiceRouter = require("./app/invoice/router");
 const imageRouter = require("./app/image/router");
+const apiExternalRouter = require("./app/apiExternal/router");
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(decodeToken());
 
+app.use("/ext", apiExternalRouter);
 app.use("/auth", authRouter);
 app.use("/api", productsRouter);
 app.use("/api", categoriesRouter);
